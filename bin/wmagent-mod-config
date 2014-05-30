@@ -142,21 +142,22 @@ def modifyConfiguration(config, **args):
         # t0 agent may not have acdc_url
         if args.has_key("acdc_url"):
             config.ACDC.couchurl, config.ACDC.database = splitCouchServiceURL(args["acdc_url"])
-    
-    if hasattr(config, "JobUpdater"):   
+
+    if hasattr(config, "JobUpdater"):
         # t0 agent doesn't have reqmgr_url
-        if args.has_key("reqmgr_url"):    
+        if args.has_key("reqmgr_url"):
             config.JobUpdater.reqMgrUrl = args["reqmgr_url"]
-    
+
     if hasattr(config, "DBS3Upload"):
         config.DBS3Upload.dbsUrl = args["dbs3_url"]
-    
-    if hasattr(config, "PhEDExInjector"):   
-        config.PhEDExInjector.phedexurl = args["phedex_url"]    
+
+    if hasattr(config, "PhEDExInjector"):
+        config.PhEDExInjector.phedexurl = args["phedex_url"]
 
     if hasattr(config,"AsyncTransfer"):
         config.CoreDatabase.connectUrl = '%s/asynctransfer_agent' % args["couch_url"]
         config.AsyncTransfer.couch_instance = args["couch_url"]
+        config.AsyncTransfer.couch_instance = args["files_db"]
         config.AsyncTransfer.data_source = args["couch_url"]
         config.AsyncTransfer.serverDN = args["host_dn"]
         config.AsyncTransfer.couch_user_monitoring_instance = args["couch_url"]
@@ -182,6 +183,7 @@ def modifyConfiguration(config, **args):
 
     if hasattr(config,"DBSPublisher"):
         config.DBSPublisher.couch_instance = args["couch_url"]
+        config.DBSPublisher.couch_instance = args["files_db"]
         config.DBSPublisher.serverDN = args["host_dn"]
         config.DBSPublisher.cache_area = args["ufc_service_url"]
         config.DBSPublisher.opsProxy = args["ops_proxy"]
@@ -302,7 +304,7 @@ def main(argv=None):
              "sb_hostname=", "sb_port=", "sb_basepath=", "ufc_hostname=", "ufc_port=",
              "ufc_service_url=", "ufc_cachedir=", "client_mapping=", "wmbs_service_port=",
              "workload_summary_url=", "coredb_url=", "wmstats_url=", "ops_proxy=", "reqmgr_url=",
-             "acdc_url=", "amq_auth_file=", "dbs3_url=", "phedex_url=", "dqm_url="])
+             "acdc_url=", "amq_auth_file=", "dbs3_url=", "phedex_url=", "dqm_url=", "files_db="])
 
         except getopt.error, msg:
             raise Usage(msg)
@@ -322,8 +324,8 @@ def main(argv=None):
                           '--sb_hostname', '--sb_port', '--sb_basepath', '--ufc_hostname',
                           '--ufc_port', '--ufc_service_url', '--ufc_cachedir',
                           '--client_mapping', '--wmbs_service_port', '--workload_summary_url',
-                          '--wmstats_url', '--ops_proxy', '--reqmgr_url', '--acdc_url', 
-                          '--amq_auth_file', '--dbs3_url', '--phedex_url', '--dqm_url'):
+                          '--wmstats_url', '--ops_proxy', '--reqmgr_url', '--acdc_url',
+                          '--amq_auth_file', '--dbs3_url', '--phedex_url', '--dqm_url', "files_db="):
 
                 parameters[option[2:]] = value
 
